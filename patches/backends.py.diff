@@ -1,0 +1,31 @@
+diff --git a/cosmos_framework/model/attention/backends.py b/cosmos_framework/model/attention/backends.py
+index 4236b35..8dc5080 100644
+--- a/cosmos_framework/model/attention/backends.py
++++ b/cosmos_framework/model/attention/backends.py
+@@ -23,10 +23,14 @@ from cosmos_framework.model.attention.utils.safe_ops import log
+ from cosmos_framework.model.attention.utils.safe_ops.functools import lru_cache
+ 
+ 
++def sdpa_attention_check(**kwargs) -> bool:
++    return True
++
+ BACKEND_CHECK_MAP = {
+     "natten": natten_attention_check,
+     "flash2": flash2_attention_check,
+     "flash3": flash3_attention_check,
++    "sdpa": sdpa_attention_check,
+ }
+ 
+ BACKEND_MULTI_DIM_CHECK_MAP = {
+@@ -143,9 +147,10 @@ def get_backend_list(arch_tag: int) -> list[str]:
+         default_backends = [
+             "flash2",
+             "natten",
++            "sdpa",
+         ]
+     else:
+-        default_backends = ["natten"]
++        default_backends = ["natten", "sdpa"]
+ 
+     # Apply environment variable filtering
+     return filter_attention_backends(default_backends)

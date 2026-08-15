@@ -1,0 +1,25 @@
+diff --git a/cosmos_framework/inference/vision.py b/cosmos_framework/inference/vision.py
+index ce3b62b..3f3a49d 100644
+--- a/cosmos_framework/inference/vision.py
++++ b/cosmos_framework/inference/vision.py
+@@ -185,9 +185,17 @@ def read_media_frames(path: Path, max_frames: int) -> tuple[torch.Tensor, float]
+         return frames, 1.0
+     if ext not in _VIDEO_EXTENSIONS:
+         raise ValueError(f"Unsupported media extension: {ext}")
+-    frames, _, info = torchvision.io.read_video(str(path), pts_unit="sec")
+-    frames = frames[:max_frames].permute(0, 3, 1, 2).permute(1, 0, 2, 3)
+-    fps = float(info.get("video_fps", 24.0))
++    import av as _av
++    container = _av.open(str(path))
++    stream = container.streams.video[0]
++    fps = float(stream.average_rate) if stream.average_rate else 24.0
++    frame_list = []
++    for frame in container.decode(video=0):
++        frame_list.append(torch.from_numpy(frame.to_ndarray(format="rgb24")))
++        if len(frame_list) >= max_frames:
++            break
++    container.close()
++    frames = torch.stack(frame_list).permute(0, 3, 1, 2).permute(1, 0, 2, 3)
+     return frames, fps
+ 
+ 
