@@ -1,5 +1,8 @@
 # gb10_cosmos_policy_server
 
+<img width="800" height="450" alt="Screencast from 2026-08-13 18-24-11_10s_timelapse" src="https://github.com/user-attachments/assets/1e4ea1f1-6ad6-4308-88c1-6fd2b2803144" />
+
+
 Docker setup for running the Cosmos3 action-policy server ([`nvidia/Cosmos3-Nano-Policy-DROID`](https://huggingface.co/nvidia/Cosmos3-Nano-Policy-DROID)) against the RoboLab benchmark harness on a GB10 (Grace Blackwell, unified-memory, DGX Spark-class) box — aarch64, CUDA 13.0, compute capability 12.1.
 
 This repo vendors the `Dockerfile`/entrypoint, the GB10-specific source patches, and the policy server script needed on top of an `NVIDIA/cosmos-framework` checkout. It is not a fork of `cosmos-framework` — apply `patches/` to your own checkout before building.
